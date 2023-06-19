@@ -5,7 +5,7 @@ import { User } from "./schemas/user.schema";
 import { JwtService } from "@nestjs/jwt";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
-
+import { Response } from "express";
 import * as bcrypt from "bcryptjs";
 
 @Injectable()
@@ -17,7 +17,8 @@ export class AuthService {
   ) {}
 
   async register(
-    registerDto: RegisterDto
+    registerDto: RegisterDto,
+    response: Response
   ): Promise<{ token: string; message: string }> {
     const { name, email, password } = registerDto;
 
@@ -38,10 +39,15 @@ export class AuthService {
     });
     const token = this.jwtService.sign({ id: user._id });
 
+    response.cookie("token", token, { httpOnly: true });
+
     return { token, message: "Success" };
   }
 
-  async login(loginDto: LoginDto): Promise<{ token: string }> {
+  async login(
+    loginDto: LoginDto,
+    response: Response
+  ): Promise<{ token: string }> {
     const { email, password } = loginDto;
 
     const user = await this.userModel.findOne({ email });
@@ -57,6 +63,8 @@ export class AuthService {
     }
 
     const token = this.jwtService.sign({ id: user._id });
+
+    response.cookie("token", token, { httpOnly: true });
 
     return { token };
   }
