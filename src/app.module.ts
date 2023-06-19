@@ -17,6 +17,7 @@ import {
   Producer,
   ProducerSchema,
 } from "./movies-tv-shows/schemas/producer.schema";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import {
       { name: CrewMember.name, schema: CrewMemberSchema },
     ]),
     MoviesTvShowsModule,
+    AuthModule,
   ],
 
   controllers: [AppController],

@@ -17,11 +17,19 @@ export class MoviesTvShowsService {
   }
 
   findAll() {
-    return this.movieTvModel.find();
+    return this.movieTvModel
+      .find()
+      .populate("producer")
+      .populate("actor")
+      .populate("crewMember");
   }
 
   findOne(id: string) {
-    return this.movieTvModel.findOne({ id });
+    return this.movieTvModel
+      .findOne({ id })
+      .populate("producer")
+      .populate("actor")
+      .populate("crewMember");
   }
 
   update(id: string, updateMoviesTvShowDto: UpdateMoviesTvShowDto) {
