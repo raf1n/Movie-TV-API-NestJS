@@ -4,6 +4,8 @@ import { Actor } from "./actor.schema";
 import { CrewMember } from "./crew-member.schema";
 import { Producer } from "./producer.schema";
 
+export type MovieTVDocument = MovieTV & Document;
+
 @Schema()
 export class MovieTV extends Document {
   @Prop({ required: true })
@@ -22,4 +24,4 @@ export class MovieTV extends Document {
   crewMembers: CrewMember[];
 }
 
-export const MovieSchema = SchemaFactory.createForClass(MovieTV);
+export const MovieTVSchema = SchemaFactory.createForClass(MovieTV);

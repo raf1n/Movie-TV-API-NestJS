@@ -1,9 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { MoviesTvShowsService } from './movies-tv-shows.service';
-import { CreateMoviesTvShowDto } from './dto/create-movies-tv-show.dto';
-import { UpdateMoviesTvShowDto } from './dto/update-movies-tv-show.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from "@nestjs/common";
+import { MoviesTvShowsService } from "./movies-tv-shows.service";
+import { CreateMoviesTvShowDto } from "./dto/create-movies-tv-show.dto";
+import { UpdateMoviesTvShowDto } from "./dto/update-movies-tv-show.dto";
 
-@Controller('movies-tv-shows')
+@Controller("movies-tv-shows")
 export class MoviesTvShowsController {
   constructor(private readonly moviesTvShowsService: MoviesTvShowsService) {}
 
@@ -17,18 +25,21 @@ export class MoviesTvShowsController {
     return this.moviesTvShowsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.moviesTvShowsService.findOne(+id);
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.moviesTvShowsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMoviesTvShowDto: UpdateMoviesTvShowDto) {
-    return this.moviesTvShowsService.update(+id, updateMoviesTvShowDto);
+  @Patch(":id")
+  update(
+    @Param("id") id: string,
+    @Body() updateMoviesTvShowDto: UpdateMoviesTvShowDto
+  ) {
+    return this.moviesTvShowsService.update(id, updateMoviesTvShowDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.moviesTvShowsService.remove(+id);
+  @Delete(":id")
+  remove(@Param("id") id: string) {
+    return this.moviesTvShowsService.remove(id);
   }
 }
