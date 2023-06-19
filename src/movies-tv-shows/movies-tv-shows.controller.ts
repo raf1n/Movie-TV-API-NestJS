@@ -6,16 +6,19 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { MoviesTvShowsService } from "./movies-tv-shows.service";
 import { CreateMoviesTvShowDto } from "./dto/create-movies-tv-show.dto";
 import { UpdateMoviesTvShowDto } from "./dto/update-movies-tv-show.dto";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller("movies-tv-shows")
 export class MoviesTvShowsController {
   constructor(private readonly moviesTvShowsService: MoviesTvShowsService) {}
 
   @Post()
+  @UseGuards(AuthGuard("jwt"))
   create(@Body() createMoviesTvShowDto: CreateMoviesTvShowDto) {
     return this.moviesTvShowsService.create(createMoviesTvShowDto);
   }

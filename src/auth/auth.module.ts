@@ -11,9 +11,16 @@ import { UserSchema } from "./schemas/user.schema";
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: "jwt" }),
-    JwtModule.register({
-      secret: `${process.env["JWT_SECRET_KEY"]}`,
-      signOptions: { expiresIn: "1d" },
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          secret: config.get<string>("JWT_SECRET_KEY"),
+          signOptions: {
+            expiresIn: config.get<string | number>("JWT_EXPIRES"),
+          },
+        };
+      },
     }),
     MongooseModule.forFeature([{ name: "User", schema: UserSchema }]),
   ],
