@@ -1,73 +1,93 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Movie/TV Show API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is a Node.js application that provides an API for managing movies and TV shows. It uses a community-supported open-source Node.js framework NestJS and a NoSQL database MongoDB. The API includes authentication using JWT (JSON Web Tokens) stored in cookies and implements role-based access control.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Prerequisites
 
-## Description
+Before running the application, ensure you have the following dependencies installed:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Node.js (LTS version)
+- Docker (optional, for running the application in a containerized environment)
 
-## Installation
+## Getting Started
 
-```bash
-$ npm install
+To set up the development environment and run the application locally, follow these steps:
+
+1 . Clone the repository:
+
+```
+git clone git clone https://github.com/raf1n/SS-BACKEND--TASK-Rahim-Uddin-Rafin.git
+cd SS-BACKEND--TASK-Rahim-Uddin-Rafin/
 ```
 
-## Running the app
+2 . Install the dependencies:
 
-```bash
-# development
-$ npm run start
+    npm i / yarn
 
-# watch mode
-$ npm run start:dev
+3 . Set Environment Variables:
 
-# production mode
-$ npm run start:prod
-```
+    # MongoDB connection string
+    DATABASE_URL=mongodb://0.0.0.0:27017/movie-tv-db / <Your MongoDB URI>
 
-## Test
+    # JWT secret key
+    JWT_SECRET_KEY= <your-secret-key>
 
-```bash
-# unit tests
-$ npm run test
+    # JWT Expries in
+    JWT_EXPIRES=3d
 
-# e2e tests
-$ npm run test:e2e
+    # Server port
+    PORT=8000
 
-# test coverage
-$ npm run test:cov
-```
+4 . Start the development server:
 
-## Support
+    npm run start:dev / yarn start:dev
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+The API's will be accessible at http://localhost:8000.
 
-## Stay in touch
+# Authentication and Authorization
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+The API implements stateless authentication using JWT (JSON Web Tokens) stored in cookies. The authentication module provides two endpoints: **/auth/register** for user registration and **/auth/login** for user login.
 
-## License
+- Registration: Send a POST request to /auth/register with the required user details in the request body (name, email, password, role = "user" | "admin"). The password is securely hashed using bcrypt. Upon successful registration, a JWT token will be stored in a secure HTTP-only cookie.
 
-Nest is [MIT licensed](LICENSE).
+- Login: Send a POST request to /auth/login with the user's credentials (email and password) in the request body. The password is compared using bcrypt for secure authentication. If the credentials are valid, a JWT token will be stored in a secure HTTP-only cookie.
+
+To access protected routes, the JWT token have to be present in the request cookies. Certain routes are restricted to specific user roles (admin role). The RolesGuard is used to enforce role-based access control.
+
+# API Endpoints
+
+The API provides the following endpoints:
+
+- GET /movies-tv-shows: Get a list of all movies and TV shows.
+- GET /movies-tv-shows/:id: Get details of a specific movie or TV show.
+- POST /movies-tv-shows: Create a new movie or TV show (**restricted to admin role**).
+- PATCH /movies-tv-shows/:id: Update details of a specific movie or TV show (**restricted to admin role**).
+- DELETE /movies-tv-shows/:id: Delete a specific movie or TV show (**restricted to admin role**).
+
+**_Please note that the API requires authentication to access the endpoints. Ensure that you have register or login before accessing the API's, which will include the JWT token in the request cookies._**
+
+# Docker
+
+You can also run the application using Docker. To do so, follow these steps:
+
+### Option 1
+
+1 . Build the Docker image:
+
+    docker build -t movie-tv-api .
+
+2 . Start the Docker container:
+
+    docker run -p 8000:8000 -d movie-tv-api
+
+The API will be accessible at http://localhost:8000.
+
+### Option 2
+
+1 . Make sure you have Docker Compose installed. You can install it separately or use the version that comes bundled with Docker Desktop.
+
+2 . Open a terminal or command prompt, navigate to your project's root directory (where the docker-compose.yml file is located), and run the following command to start the containers:
+
+    docker-compose up
+
+The API will be accessible at http://localhost:8000.
