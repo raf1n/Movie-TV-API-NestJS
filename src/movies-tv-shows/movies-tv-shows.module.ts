@@ -7,6 +7,7 @@ import { AuthModule } from "../auth/auth.module";
 import { Actor, ActorSchema } from "./schemas/actor.schema";
 import { CrewMember, CrewMemberSchema } from "./schemas/crew-member.schema";
 import { Producer, ProducerSchema } from "./schemas/producer.schema";
+import { RolesGuard } from "src/auth/guards/roles.guard";
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { Producer, ProducerSchema } from "./schemas/producer.schema";
     ]),
   ],
   controllers: [MoviesTvShowsController],
-  providers: [MoviesTvShowsService],
+  providers: [MoviesTvShowsService, RolesGuard],
 })
 export class MoviesTvShowsModule {}

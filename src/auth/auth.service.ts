@@ -20,7 +20,7 @@ export class AuthService {
     registerDto: RegisterDto,
     response: Response
   ): Promise<{ token: string; message: string }> {
-    const { name, email, password } = registerDto;
+    const { name, email, password, role } = registerDto;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -36,6 +36,7 @@ export class AuthService {
       name,
       email,
       password: hashedPassword,
+      role,
     });
     const token = this.jwtService.sign({ id: user._id });
 
