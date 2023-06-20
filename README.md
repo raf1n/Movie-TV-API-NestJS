@@ -58,11 +58,11 @@ To access protected routes, the JWT token have to be present in the request cook
 
 The API provides the following endpoints:
 
-- GET /movies-tv-shows: Get a list of all movies and TV shows.
-- GET /movies-tv-shows/:id: Get details of a specific movie or TV show.
-- POST /movies-tv-shows: Create a new movie or TV show (**restricted to admin role**).
-- PATCH /movies-tv-shows/:id: Update details of a specific movie or TV show (**restricted to admin role**).
-- DELETE /movies-tv-shows/:id: Delete a specific movie or TV show (**restricted to admin role**).
+- GET /movies-tv-shows : Get a list of all movies and TV shows.
+- GET /movies-tv-shows/:id : Get details of a specific movie or TV show.
+- POST /movies-tv-shows : Create a new movie or TV show (**restricted to admin role**).
+- PATCH /movies-tv-shows/:id : Update details of a specific movie or TV show (**restricted to admin role**).
+- DELETE /movies-tv-shows/:id : Delete a specific movie or TV show (**restricted to admin role**).
 
 **_Please note that the API requires authentication to access the endpoints. Ensure that you have register or login before accessing the API's, which will include the JWT token in the request cookies._**
 
