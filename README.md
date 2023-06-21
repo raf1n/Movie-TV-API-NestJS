@@ -16,7 +16,7 @@ To set up the development environment and run the application locally, follow th
 1 . Clone the repository:
 
 ```
-git clone git clone https://github.com/raf1n/SS-BACKEND-TASK-Rahim-Uddin-Rafin.git
+git clone https://github.com/raf1n/SS-BACKEND-TASK-Rahim-Uddin-Rafin.git
 cd SS-BACKEND-TASK-Rahim-Uddin-Rafin/
 ```
 
