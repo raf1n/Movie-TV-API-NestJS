@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateMoviesTvShowDto } from "./dto/create-movies-tv-show.dto";
 import { UpdateMoviesTvShowDto } from "./dto/update-movies-tv-show.dto";
 import { MovieTV, MovieTVDocument } from "./schemas/movie-tv.schema";
@@ -23,49 +23,84 @@ export class MoviesTvShowsService {
   ) {}
 
   async create(createMoviesTvShowDto: CreateMoviesTvShowDto) {
-    const { title, runtime, actors, crewMembers, producers } =
+    const { title, synopsis, runtime, actors, crewMembers, producers } =
       createMoviesTvShowDto;
 
-    const createdActors = await this.createActors(actors);
-    const createdCrewMembers = await this.createCrewMembers(crewMembers);
-    const createdProducers = await this.createProducers(producers);
+    const actorsToAdd = await this.findOrCreateActors(actors);
+    const crewMembersToAdd = await this.findOrCreateCrewMembers(crewMembers);
+    const producersToAdd = await this.findOrCreateProducers(producers);
 
     const movie = new this.movieTvModel({
       title,
       runtime,
-      actors: createdActors,
-      crewMembers: createdCrewMembers,
-      producers: createdProducers,
+      synopsis,
+      actors: actorsToAdd,
+      crewMembers: crewMembersToAdd,
+      producers: producersToAdd,
     });
 
     return movie.save();
   }
 
-  private async createActors(names: string[]): Promise<Actor[]> {
-    const actors = [];
-    for (const name of names) {
+  private async findOrCreateActors(names: string[]): Promise<Actor[]> {
+    const existingActors = await this.actorModel.find({ name: { $in: names } });
+    const existingActorNames = existingActors.map((actor) => actor.name);
+    const newActorNames = names.filter(
+      (name) => !existingActorNames.includes(name)
+    );
+
+    const createdActors: Actor[] = [];
+
+    for (const name of newActorNames) {
       const actor = await this.actorModel.create({ name });
-      actors.push(actor._id);
+      createdActors.push(actor);
     }
-    return actors;
+
+    return [...existingActors, ...createdActors];
   }
 
-  private async createCrewMembers(names: string[]): Promise<CrewMember[]> {
-    const crewMembers = [];
-    for (const name of names) {
+  private async findOrCreateCrewMembers(
+    names: string[]
+  ): Promise<CrewMember[]> {
+    const existingCrewMembers = await this.crewMemberModel.find({
+      name: { $in: names },
+    });
+    const existingCrewMemberNames = existingCrewMembers.map(
+      (crewMember) => crewMember.name
+    );
+    const newCrewMemberNames = names.filter(
+      (name) => !existingCrewMemberNames.includes(name)
+    );
+
+    const createdCrewMembers: CrewMember[] = [];
+
+    for (const name of newCrewMemberNames) {
       const crewMember = await this.crewMemberModel.create({ name });
-      crewMembers.push(crewMember._id);
+      createdCrewMembers.push(crewMember);
     }
-    return crewMembers;
+
+    return [...existingCrewMembers, ...createdCrewMembers];
   }
 
-  private async createProducers(names: string[]): Promise<Producer[]> {
-    const producers = [];
-    for (const name of names) {
+  private async findOrCreateProducers(names: string[]): Promise<Producer[]> {
+    const existingProducers = await this.producerModel.find({
+      name: { $in: names },
+    });
+    const existingProducerNames = existingProducers.map(
+      (producer) => producer.name
+    );
+    const newProducerNames = names.filter(
+      (name) => !existingProducerNames.includes(name)
+    );
+
+    const createdProducers: Producer[] = [];
+
+    for (const name of newProducerNames) {
       const producer = await this.producerModel.create({ name });
-      producers.push(producer._id);
+      createdProducers.push(producer);
     }
-    return producers;
+
+    return [...existingProducers, ...createdProducers];
   }
 
   async findAll() {
@@ -128,11 +163,31 @@ export class MoviesTvShowsService {
     return show[0];
   }
 
-  update(id: string, updateMoviesTvShowDto: UpdateMoviesTvShowDto) {
-    return this.movieTvModel.findOneAndUpdate({ id }, updateMoviesTvShowDto);
+  async update(id: string, updateMoviesTvShowDto: UpdateMoviesTvShowDto) {
+    const { title, synopsis, runtime, actors, crewMembers, producers } =
+      updateMoviesTvShowDto;
+
+    const updatedActors = await this.findOrCreateActors(actors);
+    const updatedCrewMembers = await this.findOrCreateCrewMembers(crewMembers);
+    const updatedProducers = await this.findOrCreateProducers(producers);
+
+    const updatedMovie = await this.movieTvModel.findByIdAndUpdate(
+      id,
+      {
+        title,
+        runtime,
+        synopsis,
+        actors: updatedActors,
+        crewMembers: updatedCrewMembers,
+        producers: updatedProducers,
+      },
+      { new: true }
+    );
+
+    return updatedMovie;
   }
 
   remove(id: string) {
-    return this.movieTvModel.findOneAndDelete({ id });
+    return this.movieTvModel.findOneAndDelete({ _id: id });
   }
 }

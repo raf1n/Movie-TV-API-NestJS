@@ -15,6 +15,9 @@ export class MovieTV extends Document {
   @Prop({ required: true })
   runtime: number;
 
+  @Prop({ required: true })
+  synopsis: string;
+
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Producer" }] })
   producers: Producer[];
 

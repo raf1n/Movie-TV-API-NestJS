@@ -17,6 +17,10 @@ export class CreateMoviesTvShowDto {
   runtime: number;
 
   @IsNotEmpty()
+  @IsString()
+  synopsis: string;
+
+  @IsNotEmpty()
   @IsArray()
   @IsString({ each: true })
   actors: string[];
