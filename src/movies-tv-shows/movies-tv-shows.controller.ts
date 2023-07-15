@@ -12,8 +12,8 @@ import { MoviesTvShowsService } from "./movies-tv-shows.service";
 import { CreateMoviesTvShowDto } from "./dto/create-movies-tv-show.dto";
 import { UpdateMoviesTvShowDto } from "./dto/update-movies-tv-show.dto";
 import { AuthGuard } from "@nestjs/passport";
-import { RolesGuard } from "src/auth/guards/roles.guard";
-import { Roles } from "src/auth/decorators/roles.decorator";
+import { RolesGuard } from "../auth/guards/roles.guard";
+import { Roles } from "../auth/decorators/roles.decorator";
 
 @Controller("movies-tv-shows")
 export class MoviesTvShowsController {
